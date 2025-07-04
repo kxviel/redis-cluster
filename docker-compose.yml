@@ -150,3 +150,17 @@ services:
       - slave-C2-data:/data
     networks:
       - redis-cluster
+
+  redis-client:
+    image: node:latest
+    container_name: redis-client
+    working_dir: /app
+    volumes:
+      - ./:/app
+    networks:
+      - redis-cluster
+    depends_on:
+      - master-A
+      - master-B
+      - master-C
+    command: tail -f /dev/null

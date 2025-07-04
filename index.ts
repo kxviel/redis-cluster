@@ -2,16 +2,16 @@ import { createCluster, type RedisClusterOptions } from "redis";
 
 const clusterConfig: RedisClusterOptions = {
   rootNodes: [
-    { url: "redis://localhost:8080" },
-    { url: "redis://localhost:8081" },
-    { url: "redis://localhost:8082" },
+    { url: "redis://master-A:6379" },
+    { url: "redis://master-B:6379" },
+    { url: "redis://master-C:6379" },
   ],
   defaults: {
     socket: {
       connectTimeout: 10000,
     },
   },
-  useReplicas: true, // Enable reading from replicas
+  useReplicas: true,
 };
 
 const runClients = async () => {
@@ -41,41 +41,7 @@ const runClients = async () => {
       console.log("🔌 Redis Cluster connection ended");
     });
 
-    // Connect to the cluster
     await cluster.connect();
-
-    // Test the cluster with some operations
-    console.log("Testing cluster operations...");
-
-    // Set some test keys
-    await cluster.set("test:key1", "Hello from Redis Cluster!");
-    await cluster.set("test:key2", "Another test value");
-    await cluster.set(
-      "test:key3",
-      JSON.stringify({ message: "JSON data", timestamp: Date.now() })
-    );
-
-    // Get the values back
-    const value1 = await cluster.get("test:key1");
-    const value2 = await cluster.get("test:key2");
-    const value3 = await cluster.get("test:key3");
-
-    console.log("Retrieved values:");
-    console.log("test:key1 =", value1);
-    console.log("test:key2 =", value2);
-    console.log("test:key3 =", value3);
-
-    // Test hash operations
-    await cluster.hSet("test:hash", {
-      field1: "value1",
-      field2: "value2",
-      field3: "value3",
-    });
-
-    const hashValues = await cluster.hGetAll("test:hash");
-    console.log("Hash values:", hashValues);
-
-    console.log("✅ All operations completed successfully!");
   } catch (error) {
     console.error("Failed to connect to Redis cluster:", error);
   } finally {
