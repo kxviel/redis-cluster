@@ -1,4 +1,4 @@
-# CLUSTER_ARGS=--cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip localhost
+# CLUSTER_ARGS=--cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no
 
 networks:
   redis-cluster:
@@ -15,7 +15,6 @@ volumes:
   slave-C1-data:
   slave-C2-data:
 
-
 services:
   master-A:
     image: redis:latest
@@ -23,9 +22,10 @@ services:
     container_name: master-A
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8080
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip master-A --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8080:6379"
+      - "18080:16379"
     volumes:
       - master-A-data:/data
     networks:
@@ -37,9 +37,10 @@ services:
     container_name: master-B
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8081
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip master-B --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8081:6379"
+      - "18081:16379"
     volumes:
       - master-B-data:/data
     networks:
@@ -51,9 +52,10 @@ services:
     container_name: master-C
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8082
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip master-C --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8082:6379"
+      - "18082:16379"
     volumes:
       - master-C-data:/data
     networks:
@@ -65,9 +67,10 @@ services:
     container_name: slave-A1
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8083
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-A1 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8083:6379"
+      - "18083:16379"
     volumes:
       - slave-A1-data:/data
     networks:
@@ -79,9 +82,10 @@ services:
     container_name: slave-A2
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8084
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-A2 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8084:6379"
+      - "18084:16379"
     volumes:
       - slave-A2-data:/data
     networks:
@@ -93,9 +97,10 @@ services:
     container_name: slave-B1
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8085
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-B1 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8085:6379"
+      - "18085:16379"
     volumes:
       - slave-B1-data:/data
     networks:
@@ -107,9 +112,10 @@ services:
     container_name: slave-B2
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8086
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-B2 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8086:6379"
+      - "18086:16379"
     volumes:
       - slave-B2-data:/data
     networks:
@@ -121,9 +127,10 @@ services:
     container_name: slave-C1
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8087
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-C1 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8087:6379"
+      - "18087:16379"
     volumes:
       - slave-C1-data:/data
     networks:
@@ -135,9 +142,10 @@ services:
     container_name: slave-C2
     env_file:
       - .env
-    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8088
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-ip slave-C2 --cluster-announce-port 6379 --cluster-announce-bus-port 16379
     ports:
       - "8088:6379"
+      - "18088:16379"
     volumes:
       - slave-C2-data:/data
     networks:
