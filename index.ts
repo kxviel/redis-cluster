@@ -44,13 +44,9 @@ const runClients = async () => {
     // Connect to the cluster
     await cluster.connect();
 
-    console.log("Inserting 1mil Keys lmao, wait bitte");
-
-    // Insert 1 million keys into the cluster
+    console.log("Inserting 1mil Keys lmao, wait bitte ... ");
     for (let i = 0; i < 1000000; i++) {
-      const randomValue = () =>
-        `Hello ${Math.random().toString(36).substring(2, 15)}`;
-      await cluster.set(`test:key${i}`, randomValue());
+      await cluster.set(`test:key${i}`, i + 1);
     }
 
     console.log("Done inserting 1 million keys!");
