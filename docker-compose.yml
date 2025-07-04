@@ -1,0 +1,142 @@
+networks:
+  redis-cluster:
+    driver: bridge
+
+volumes:
+  master-A-data:
+  master-B-data:
+  master-C-data:
+  slave-A1-data:
+  slave-A2-data:
+  slave-B1-data:
+  slave-B2-data:
+  slave-C1-data:
+  slave-C2-data:
+
+
+services:
+  master-A:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-A
+    env_file:
+      - .env
+    command: redis-server --port 8080 ${CLUSTER_ARGS}
+    ports:
+      - "8080:8080"
+    volumes:
+      - master-A-data:/data
+    networks:
+      - redis-cluster
+
+  master-B:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-B
+    env_file:
+      - .env
+    command: redis-server --port 8081 ${CLUSTER_ARGS}
+    ports:
+      - "8081:8081"
+    volumes:
+      - master-B-data:/data
+    networks:
+      - redis-cluster
+
+  master-C:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-C
+    env_file:
+      - .env
+    command: redis-server --port 8082 ${CLUSTER_ARGS}
+    ports:
+      - "8082:8082"
+    volumes:
+      - master-C-data:/data
+    networks:
+      - redis-cluster
+
+  slave-A1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-A1
+    env_file:
+      - .env
+    command: redis-server --port 8083 ${CLUSTER_ARGS}
+    ports:
+      - "8083:8083"
+    volumes:
+      - slave-A1-data:/data
+    networks:
+      - redis-cluster
+
+  slave-A2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-A2
+    env_file:
+      - .env
+    command: redis-server --port 8084 ${CLUSTER_ARGS}
+    ports:
+      - "8084:8084"
+    volumes:
+      - slave-A2-data:/data
+    networks:
+      - redis-cluster
+
+  slave-B1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-B1
+    env_file:
+      - .env
+    command: redis-server --port 8085 ${CLUSTER_ARGS}
+    ports:
+      - "8085:8085"
+    volumes:
+      - slave-B1-data:/data
+    networks:
+      - redis-cluster
+
+  slave-B2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-B2
+    env_file:
+      - .env
+    command: redis-server --port 8086 ${CLUSTER_ARGS}
+    ports:
+      - "8086:8086"
+    volumes:
+      - slave-B2-data:/data
+    networks:
+      - redis-cluster
+
+  slave-C1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-C1
+    env_file:
+      - .env
+    command: redis-server --port 8087 ${CLUSTER_ARGS}
+    ports:
+      - "8087:8087"
+    volumes:
+      - slave-C1-data:/data
+    networks:
+      - redis-cluster
+
+  slave-C2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-C2
+    env_file:
+      - .env
+    command: redis-server --port 8088 ${CLUSTER_ARGS}
+    ports:
+      - "8088:8088"
+    volumes:
+      - slave-C2-data:/data
+    networks:
+      - redis-cluster

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "allowJs": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "moduleResolution":"nodenext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+  },
+  "include": ["./index.ts"],
+}
