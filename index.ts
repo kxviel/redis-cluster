@@ -44,23 +44,16 @@ const runClients = async () => {
     // Connect to the cluster
     await cluster.connect();
 
-    console.log("Inserting 1mil Keys lmao");
+    console.log("Inserting 1mil Keys lmao, wait bitte");
 
-    // Test the cluster with some operations
-    await cluster.set("test:key1", "Hello from Redis Cluster!");
-    await cluster.set("test:key2", "Another test value");
+    // Insert 1 million keys into the cluster
+    for (let i = 0; i < 1000000; i++) {
+      const randomValue = () =>
+        `Hello ${Math.random().toString(36).substring(2, 15)}`;
+      await cluster.set(`test:key${i}`, randomValue());
+    }
 
-    const value1 = await cluster.get("test:key1");
-    const value2 = await cluster.get("test:key2");
-
-    console.log("Retrieved values:");
-    console.log("test:key1 =", value1);
-    console.log("test:key2 =", value2);
-
-    console.log("✅ All operations completed successfully!");
-
-    // Keep the connection alive for testing
-    console.log("Keeping connection alive... Press Ctrl+C to exit");
+    console.log("Done inserting 1 million keys!");
   } catch (error) {
     console.error("Failed to connect to Redis cluster:", error);
     throw error;
