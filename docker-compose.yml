@@ -21,9 +21,9 @@ services:
     container_name: master-A
     env_file:
       - .env
-    command: redis-server --port 8080 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8080
     ports:
-      - "8080:8080"
+      - "8080:6379"
     volumes:
       - master-A-data:/data
     networks:
@@ -35,9 +35,9 @@ services:
     container_name: master-B
     env_file:
       - .env
-    command: redis-server --port 8081 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8081
     ports:
-      - "8081:8081"
+      - "8081:6379"
     volumes:
       - master-B-data:/data
     networks:
@@ -49,9 +49,9 @@ services:
     container_name: master-C
     env_file:
       - .env
-    command: redis-server --port 8082 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8082
     ports:
-      - "8082:8082"
+      - "8082:6379"
     volumes:
       - master-C-data:/data
     networks:
@@ -63,9 +63,9 @@ services:
     container_name: slave-A1
     env_file:
       - .env
-    command: redis-server --port 8083 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8083
     ports:
-      - "8083:8083"
+      - "8083:6379"
     volumes:
       - slave-A1-data:/data
     networks:
@@ -77,9 +77,9 @@ services:
     container_name: slave-A2
     env_file:
       - .env
-    command: redis-server --port 8084 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8084
     ports:
-      - "8084:8084"
+      - "8084:6379"
     volumes:
       - slave-A2-data:/data
     networks:
@@ -91,9 +91,9 @@ services:
     container_name: slave-B1
     env_file:
       - .env
-    command: redis-server --port 8085 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8085
     ports:
-      - "8085:8085"
+      - "8085:6379"
     volumes:
       - slave-B1-data:/data
     networks:
@@ -105,9 +105,9 @@ services:
     container_name: slave-B2
     env_file:
       - .env
-    command: redis-server --port 8086 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8086
     ports:
-      - "8086:8086"
+      - "8086:6379"
     volumes:
       - slave-B2-data:/data
     networks:
@@ -119,9 +119,9 @@ services:
     container_name: slave-C1
     env_file:
       - .env
-    command: redis-server --port 8087 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8087
     ports:
-      - "8087:8087"
+      - "8087:6379"
     volumes:
       - slave-C1-data:/data
     networks:
@@ -133,9 +133,9 @@ services:
     container_name: slave-C2
     env_file:
       - .env
-    command: redis-server --port 8088 ${CLUSTER_ARGS}
+    command: redis-server --port 6379 ${CLUSTER_ARGS} --cluster-announce-port 8088
     ports:
-      - "8088:8088"
+      - "8088:6379"
     volumes:
       - slave-C2-data:/data
     networks:
