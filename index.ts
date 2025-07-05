@@ -18,42 +18,43 @@ const runClients = async () => {
   try {
     let cluster = createCluster(clusterConfig);
 
-    // Set up event listeners BEFORE connecting
     cluster.on("error", (e) => {
-      console.log("Damn: ", e);
+      console.log("Damnit: ", e);
     });
 
     cluster.on("ready", () => {
-      console.log("Works - Redis Cluster is ready!");
+      console.log("Works");
     });
 
     cluster.on("connect", () => {
-      console.log("Connected to Redis Cluster");
-    });
-
-    cluster.on("reconnecting", () => {
-      console.log("Reconnecting to Redis Cluster");
+      console.log("Connected");
     });
 
     cluster.on("end", () => {
-      console.log("Redis Cluster connection ended");
+      console.log("End");
     });
 
-    console.log("Attempting to connect to Redis cluster...");
+    console.log("Connecting to Redis cluster...");
 
     // Connect to the cluster
     await cluster.connect();
-
-    console.log("Inserting 1mil Keys lmao, wait bitte ... ");
-    for (let i = 0; i < 1000000; i++) {
-      await cluster.set(`test:key${i}`, i + 1);
-    }
-
-    console.log("Done inserting 1 million keys!");
+    await replicationTest(cluster);
   } catch (error) {
     console.error("Failed to connect to Redis cluster:", error);
     throw error;
   }
+};
+
+const replicationTest = async (cluster: any) => {
+  console.log("Testing Replication: ");
+
+  console.log("Inserting 1mil Keys... ");
+  console.log("might take a bit");
+  for (let i = 0; i < 1000000; i++) {
+    await cluster.set(`key-${i}`, i);
+  }
+
+  console.log("less goooo");
 };
 
 runClients();
