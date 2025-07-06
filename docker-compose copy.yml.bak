@@ -1,0 +1,94 @@
+version: '3.8'
+
+volumes:
+  master-A-data:
+  master-B-data:
+  master-C-data:
+  slave-A1-data:
+  slave-A2-data:
+  slave-B1-data:
+  slave-B2-data:
+  slave-C1-data:
+  slave-C2-data:
+
+services:
+  master-A:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-A
+    network_mode: host
+    command: redis-server --port 8080 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8080 --cluster-announce-bus-port 18080
+    volumes:
+      - master-A-data:/data
+
+  master-B:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-B
+    network_mode: host
+    command: redis-server --port 8081 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8081 --cluster-announce-bus-port 18081
+    volumes:
+      - master-B-data:/data
+
+  master-C:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: master-C
+    network_mode: host
+    command: redis-server --port 8082 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8082 --cluster-announce-bus-port 18082
+    volumes:
+      - master-C-data:/data
+
+  slave-A1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-A1
+    network_mode: host
+    command: redis-server --port 8083 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8083 --cluster-announce-bus-port 18083
+    volumes:
+      - slave-A1-data:/data
+
+  slave-A2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-A2
+    network_mode: host
+    command: redis-server --port 8084 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8084 --cluster-announce-bus-port 18084
+    volumes:
+      - slave-A2-data:/data
+
+  slave-B1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-B1
+    network_mode: host
+    command: redis-server --port 8085 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8085 --cluster-announce-bus-port 18085
+    volumes:
+      - slave-B1-data:/data
+
+  slave-B2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-B2
+    network_mode: host
+    command: redis-server --port 8086 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8086 --cluster-announce-bus-port 18086
+    volumes:
+      - slave-B2-data:/data
+
+  slave-C1:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-C1
+    network_mode: host
+    command: redis-server --port 8087 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8087 --cluster-announce-bus-port 18087
+    volumes:
+      - slave-C1-data:/data
+
+  slave-C2:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: slave-C2
+    network_mode: host
+    command: redis-server --port 8088 --cluster-enabled yes --cluster-config-file nodes.conf --cluster-node-timeout 5000 --appendonly yes --bind 0.0.0.0 --protected-mode no --cluster-announce-ip 127.0.0.1 --cluster-announce-port 8088 --cluster-announce-bus-port 18088
+    volumes:
+      - slave-C2-data:/data
