@@ -5,6 +5,13 @@ const clusterConfig: RedisClusterOptions = {
     { url: "redis://master-A:6379" },
     { url: "redis://master-B:6379" },
     { url: "redis://master-C:6379" },
+
+    { url: "redis://slave-A1:6379" },
+    { url: "redis://slave-A2:6379" },
+    { url: "redis://slave-B1:6379" },
+    { url: "redis://slave-B2:6379" },
+    { url: "redis://slave-C1:6379" },
+    { url: "redis://slave-C2:6379" },
   ],
   defaults: {
     socket: {
@@ -68,8 +75,10 @@ const replicationTest = async (cluster: any) => {
         promises.push(cluster.set(`key-${j}`, j.toString()));
       }
 
-      await Promise.all(promises).then(() => console.log("1 mil Keys Added"));
+      await Promise.all(promises);
     }
+
+    console.log("1 mil Keys Added");
   } catch (error) {
     console.error("Replication test failed:", error);
     throw error;
