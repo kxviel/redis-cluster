@@ -54,10 +54,7 @@ const runClients = async () => {
 };
 
 const replicationTest = async (cluster: any) => {
-  console.log("Starting replication test...");
-  console.log(
-    "Inserting 10,000 keys for testing (reduced from 1M for debugging)..."
-  );
+  console.log("Starting replication test, might take a while...");
 
   const totalKeys = 1000000;
   const batchSize = 100;
@@ -77,16 +74,6 @@ const replicationTest = async (cluster: any) => {
         console.log(`Inserted ${i + batchSize} keys...`);
       }
     }
-
-    // console.log(`Done inserting ${totalKeys} keys. Checking replication...`);
-
-    // // Test reading some keys
-    // console.log("Testing key retrieval...");
-    // const testKeys = [0, 1000, 5000, 9999];
-    // for (const keyNum of testKeys) {
-    //   const value = await cluster.get(`key-${keyNum}`);
-    //   console.log(`key-${keyNum} = ${value}`);
-    // }
   } catch (error) {
     console.error("Replication test failed:", error);
     throw error;
