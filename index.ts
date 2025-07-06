@@ -68,11 +68,7 @@ const replicationTest = async (cluster: any) => {
         promises.push(cluster.set(`key-${j}`, j.toString()));
       }
 
-      await Promise.all(promises);
-
-      if (i % 1000 === 0) {
-        console.log(`Inserted ${i + batchSize} keys...`);
-      }
+      await Promise.all(promises).then(() => console.log("1 mil Keys Added"));
     }
   } catch (error) {
     console.error("Replication test failed:", error);
