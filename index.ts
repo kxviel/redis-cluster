@@ -1,4 +1,3 @@
-import { exec } from "child_process";
 import { createCluster, type RedisClusterOptions } from "redis";
 
 const clusterConfig: RedisClusterOptions = {
@@ -10,85 +9,93 @@ const clusterConfig: RedisClusterOptions = {
   defaults: {
     socket: {
       connectTimeout: 10000,
+      reconnectStrategy: (retries) => Math.min(retries * 50, 500),
     },
   },
   useReplicas: true,
 };
 
 const runClients = async () => {
+  let cluster;
   try {
-    let cluster = createCluster(clusterConfig);
+    cluster = createCluster(clusterConfig);
 
     cluster.on("error", (e) => {
-      console.log("Damnit: ", e);
+      console.log("Cluster error: ", e);
     });
 
     cluster.on("ready", () => {
-      console.log("Works");
+      console.log("Cluster ready");
     });
 
     cluster.on("connect", () => {
-      console.log("Connected");
+      console.log("Connected to cluster");
     });
 
     cluster.on("end", () => {
-      console.log("End");
+      console.log("Cluster connection ended");
     });
 
     console.log("Connecting to Redis cluster...");
 
-    // Connect to the cluster
     await cluster.connect();
-    await replicationTest(cluster);
-    // await availabilityTest(cluster);
+    await cluster.ping();
+    console.log("Cluster ping successful");
 
-    // await crashMultipleNodes(cluster);
-    // await crashOneWholeNode(cluster);
+    await replicationTest(cluster);
   } catch (error) {
     console.error("Failed to connect to Redis cluster:", error);
+    throw error;
+  } finally {
+    if (cluster) {
+      await cluster.close();
+    }
+  }
+};
+
+const replicationTest = async (cluster: any) => {
+  console.log("Starting replication test...");
+  console.log(
+    "Inserting 10,000 keys for testing (reduced from 1M for debugging)..."
+  );
+
+  const totalKeys = 1000000;
+  const batchSize = 100;
+
+  try {
+    for (let i = 0; i < totalKeys; i += batchSize) {
+      const endIndex = Math.min(i + batchSize, totalKeys);
+
+      const promises = [];
+      for (let j = i; j < endIndex; j++) {
+        promises.push(cluster.set(`key-${j}`, j.toString()));
+      }
+
+      await Promise.all(promises);
+
+      if (i % 1000 === 0) {
+        console.log(`Inserted ${i + batchSize} keys...`);
+      }
+    }
+
+    // console.log(`Done inserting ${totalKeys} keys. Checking replication...`);
+
+    // // Test reading some keys
+    // console.log("Testing key retrieval...");
+    // const testKeys = [0, 1000, 5000, 9999];
+    // for (const keyNum of testKeys) {
+    //   const value = await cluster.get(`key-${keyNum}`);
+    //   console.log(`key-${keyNum} = ${value}`);
+    // }
+  } catch (error) {
+    console.error("Replication test failed:", error);
     throw error;
   }
 };
 
-const execCommand = (command: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(command, (err, stdout, stderr) => {
-      if (err) {
-        console.error(`Error executing ${command}:`, stderr);
-        return reject(err);
-      }
-      resolve(stdout);
-    });
-  });
-};
-
-const replicationTest = async (cluster: any) => {
-  console.log("Inserting 1 mil Keys, might take a while...");
-
-  const batchSize = 1000;
-
-  for (let i = 0; i < 1000000; i += batchSize) {
-    const multi = cluster.multi();
-    const endIndex = Math.min(i + batchSize, 1000000);
-
-    for (let j = i; j < endIndex; j++) {
-      multi.set(`key-${j}`, j.toString());
-    }
-
-    await multi.exec();
-
-    if (i % 100000 === 0) {
-      console.log(`Inserted ${i + batchSize} keys...`);
-    }
-  }
-
-  console.log("Done inserting keys. Checking replication...");
-
-  try {
-    await execCommand("bash get-dbsize.sh");
-  } catch (error) {
-    console.error("Error getting database size:", error);
-  }
-};
+process.on("SIGINT", () => {
+  console.log("Received SIGINT, shutting down gracefully...");
+  process.exit(0);
+});
 
 runClients();

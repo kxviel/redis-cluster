@@ -1,13 +1,9 @@
 {
   "name": "redis-cluster",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
-  "scripts": {
-    "dev": "node --watch index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
