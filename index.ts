@@ -6,6 +6,7 @@ const clusterConfig: RedisClusterOptions = {
     { url: "redis://master-B:6379" },
     { url: "redis://master-C:6379" },
 
+    // just to make sure it doesnt give me errorss
     { url: "redis://slave-A1:6379" },
     { url: "redis://slave-A2:6379" },
     { url: "redis://slave-B1:6379" },
